@@ -9,7 +9,7 @@ var routes = require('./routes/index');
 
 //DB Connection
 var pg = require('pg');
-var conString = process.env.DATABASE_URL || "postgres://local_admin:1661@localhost:5432/mydb";
+var conString = process.env.DATABASE_URL;
 var client = new pg.Client(conString);
 client.connect();
 
