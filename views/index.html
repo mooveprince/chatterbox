@@ -63,7 +63,8 @@
                  name = name.length > 0 ? name : "Anyonomus";  
                  var msgPair = { 
                         name : name, 
-                        content: $('#msg').val()
+                        content: $('#msg').val(),
+                        colorDef : colorDef
                  };  
                  socket.emit('chat', msgPair);
                  $("#messages").animate({ scrollTop: $(document).height() }, "fast");
@@ -71,7 +72,7 @@
                  return false; 
               });   
               socket.on ('chat', function(msgPair) {
-                  $('#messages').append($('<li>').text(msgPair.name + ": " + msgPair.content).css('color', colorDef));
+                  $('#messages').append($('<li>').text(msgPair.name + ": " + msgPair.content).css('color', msgPair.colorDef));
               });  
         });
     </script>        
