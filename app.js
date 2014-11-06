@@ -43,9 +43,24 @@ app.use(function(req,res,next){
 
 app.use('/', routes);
 
+//Store Message in memory
+var messages = [];
+var storeMessage = function (msgPair) {
+    messages.push (msgPair);
+    console.log ("Lenght of Message.." + messages.length);
+    if (messages.length > 10) {
+        messages.shift ( );
+    }
+}
+
 io.on('connection', function(socket){
     socket.on('chat', function(msgPair){
+        storeMessage (msgPair);
         io.emit('chat', msgPair);
+    });
+    socket.on('join', function (data, callback) {
+        console.log ("Someone joined the chat..");
+        callback(messages);
     });
 });
 

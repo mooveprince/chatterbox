@@ -57,6 +57,14 @@
                 }
             });
             
+            socket.on('connect', function (data) {
+                socket.emit('join', null, function(messages) {
+                   messages.forEach (function (msgPair) {
+                      $('#messages').append($('<li>').text(msgPair.name + ": " + msgPair.content).css('color', msgPair.colorDef));                       
+                   });
+              });               
+            });
+            
             $('form').submit(function(event){
                  event.preventDefault();
                  var name =  $('#namemdlg').val().length > 0 ? $('#namemdlg').val() : $('#namexssm').val();
