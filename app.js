@@ -43,30 +43,19 @@ app.use(function(req,res,next){
 
 app.use('/', routes);
 
-//Store Message in memory
-var messages = [];
-var storeMessage = function (msgPair) {
-    messages.push (msgPair);
-    console.log ("Lenght of Message.." + messages.length);
-    if (messages.length > 10) {
-        messages.shift ( );
-    }
-}
-
 io.on('connection', function(socket){
-    socket.on('chat', function(msgPair){
-        storeMessage (msgPair);
+    socket.on('chat', function(msgPair, callback){
+        callback ( );
         io.emit('chat', msgPair);
     });
     socket.on('join', function (data, callback) {
-        console.log ("Someone joined the chat..");
-        callback(messages);
+        callback ( );
     });
 });
 
 //Isolated REST Calls
 app.get('/messages', function (request, response) {
-    client.query('SELECT * FROM chatterbox', function(err, result) {
+    client.query('select * from (SELECT * FROM chatterbox ORDER BY timestamp DESC LIMIT 10) as result order by timestamp asc', function(err, result) {
       if (err)
        { console.error(err); response.send("Error " + err); }
       else
@@ -74,6 +63,20 @@ app.get('/messages', function (request, response) {
     });
 });
 
+app.post("/addmessage", function (request, response) {
+    var name = request.body.name;
+    console.log ("Value of Name.." + name);
+    var message = request.body.message;
+    var color = request.body.color;
+    var timestamp = request.body.timestamp;
+    client.query ('insert into chatterbox (name, message, color, timestamp) values($1, $2, $3, $4)',[name, message, color, timestamp], function (err, result) {
+            if (err) {
+                console.log("Err in inser.." + err);
+            } else {
+                response.send("Success");
+            }
+    });
+});
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');

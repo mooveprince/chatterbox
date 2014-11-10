@@ -37,6 +37,13 @@
             li {
                 list-style-type: none;
             }
+            .timer {
+                display: inline-block;
+                margin-left: 5px;
+                font-size: 0.80em;
+                color: #ABB7B7;
+                font-style: italic;
+            }
         </style>        
     </head>
     <body>
@@ -58,29 +65,45 @@
             });
             
             socket.on('connect', function (data) {
-                socket.emit('join', null, function(messages) {
-                   messages.forEach (function (msgPair) {
-                      $('#messages').append($('<li>').text(msgPair.name + ": " + msgPair.content).css('color', msgPair.colorDef));                       
-                   });
-              });               
+                socket.emit('join', null, function( ) {
+                    $.getJSON( '/messages', function( messages ) {
+                        messages.forEach (function (msgPair) {
+                      $('#messages').append(
+                          $('<li>').text(msgPair.name + ": " +msgPair.message).css('color', msgPair.color ).append($('<span class="timer">').text(msgPair.timestamp))
+                      ); 
+                        });
+                    });               
+                }); 
             });
             
             $('form').submit(function(event){
                  event.preventDefault();
                  var name =  $('#namemdlg').val().length > 0 ? $('#namemdlg').val() : $('#namexssm').val();
                  name = name.length > 0 ? name : "Anyonomus";  
+                 var currentdate = new Date(); 
+                 var timestamp = currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() + " "
+                                 + (currentdate.getMonth()+1) + "/" + (currentdate.getDate())  + "/" + currentdate.getFullYear();
                  var msgPair = { 
                         name : name, 
-                        content: $('#msg').val(),
-                        colorDef : colorDef
+                        message: $('#msg').val(),
+                        color : colorDef,
+                        timestamp : timestamp
                  };  
-                 socket.emit('chat', msgPair);
+                 socket.emit('chat', msgPair, function ( ) {
+                     $.ajax({
+                         type: 'POST',
+                         data: msgPair,
+                         url: '/addmessage',
+                         dataType: 'JSON'
+                     });
+                 });
                  $("#messages").animate({ scrollTop: $(document).height() }, "fast");
                  $('#msg').val('');
                  return false; 
               });   
               socket.on ('chat', function(msgPair) {
-                  $('#messages').append($('<li>').text(msgPair.name + ": " + msgPair.content).css('color', msgPair.colorDef));
+                  $('#messages').append($('<li>').text(msgPair.name + ": " + msgPair.message).css('color', msgPair.color).append($('<span class="timer">').text(msgPair.timestamp))
+                                       );
               });  
         });
     </script>        
