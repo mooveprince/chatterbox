@@ -65,7 +65,6 @@ app.get('/messages', function (request, response) {
 
 app.post("/addmessage", function (request, response) {
     var name = request.body.name;
-    console.log ("Value of Name.." + name);
     var message = request.body.message;
     var color = request.body.color;
     var timestamp = request.body.timestamp;

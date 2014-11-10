@@ -1,8 +1,43 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
+            h1 {
+                color:#4183D7;
+            }
+            .page-header {
+                border-bottom: 1px solid #4183D7;
+            } 
+            form {
+                margin-bottom: 3px;
+            }
+            .blue {
+              color: #4183D7;
+            } 
+            .footer {
+                margin: 20px 0;
+            }
+            .footer p {
+                text-align: center;
+                padding: 10px;
+                font-size: 0.75em;
+            }            
+            .msgcontent div{
+                padding: 1%; 
+                margin-bottom: 3px;
+                height:500px;
+                border: 1px solid #DADFE1;
+                overflow:auto;
+                } 
+            li {
+                list-style-type: none;
+            }
+            .timer {
+                display: inline-block;
+                margin-left: 5px;
+                font-size: 0.80em;
+                color: #ABB7B7;
+                font-style: italic;
+            }
+            @media screen and (max-width: 768px) {
+                .textctrl {
+                    width:60%;
+                    margin-left:6%;
+                }
+            } 
